@@ -25,6 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const samplePrev = document.getElementById("artfSamplePrev");
   const sampleNext = document.getElementById("artfSampleNext");
   const caption = document.getElementById("artfCaption");
+  const explorer = document.getElementById("artf-explorer");
   const tabs = Array.from(document.querySelectorAll(".artf-category-tab"));
 
   if (!oursImage || !clothMateImage || !sceneSlider || !sceneValue || !samplePrev || !sampleNext || !caption || tabs.length === 0) return;
@@ -150,12 +151,24 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  sceneSlider.max = String(artfData.scenes.length);
-  preloadCurrentScene();
-  if ("requestIdleCallback" in window) {
-    window.requestIdleCallback(warmNearbyScenes);
-  } else {
-    window.setTimeout(warmNearbyScenes, 600);
+  function initializeScene() {
+    sceneSlider.max = String(artfData.scenes.length);
+    preloadCurrentScene();
+    if ("requestIdleCallback" in window) {
+      window.requestIdleCallback(warmNearbyScenes);
+    } else {
+      window.setTimeout(warmNearbyScenes, 600);
+    }
+    setImage();
   }
-  setImage();
+
+  if (explorer && !explorer.open) {
+    explorer.addEventListener("toggle", function startExplorer() {
+      if (!explorer.open) return;
+      explorer.removeEventListener("toggle", startExplorer);
+      initializeScene();
+    });
+  } else {
+    initializeScene();
+  }
 });

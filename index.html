@@ -29,7 +29,7 @@
   <link rel="stylesheet" href="static/css/bulma-slider.min.css">
   <link rel="stylesheet" href="static/css/fontawesome.all.min.css">
   <link rel="stylesheet" href="static/css/index.css">
-  <link rel="stylesheet" href="static/css/custom.css?v=real-robot-play-v3">
+  <link rel="stylesheet" href="static/css/custom.css?v=artf-baselines-v1">
 
   <script defer src="static/js/fontawesome.all.min.js"></script>
   <script defer src="static/js/bulma-slider.min.js"></script>
@@ -37,7 +37,7 @@
   <script defer src="static/js/three.min.js?v=0.160.0"></script>
   <script defer src="static/js/pair-value-teacher.js?v=panel2-portrait-v3"></script>
   <script defer src="static/js/visual-pair-policy.js?v=method-assets-8-v1"></script>
-  <script defer src="static/js/artf-visualization.js?v=artf-scene-ui-fix"></script>
+  <script defer src="static/js/artf-visualization.js?v=artf-baselines-v1"></script>
   <script defer src="static/js/real-inference.js?v=anonymous-media-v2"></script>
   <script defer src="static/js/real-robot.js?v=real-robot-play-v3"></script>
   <script defer src="static/js/overview-video.js?v=overview-video-v2"></script>
@@ -227,51 +227,82 @@
 
     <section class="section" id="artf-visualization">
       <div class="container artf-container">
-        <h2 class="title is-3 has-text-centered">aRTF-Clothes Dataset Visualization</h2>
+        <h2 class="title is-3 has-text-centered">Zero-Shot Comparison on aRTF-Clothes</h2>
         <p class="content has-text-centered result-intro">
-          Zero-shot predictions on aRTF-Clothes real images. Use the controls to switch garment categories, scene locations, and samples.
+          All four methods use the same annotated garment masks, without fine-tuning on aRTF-Clothes.
         </p>
-        <div class="artf-panel">
-          <div class="artf-controls" aria-label="aRTF visualization controls">
-            <div class="scene-tabs artf-category-tabs" role="tablist" aria-label="Garment category">
-              <button class="scene-tab artf-category-tab is-active" type="button" data-category="towels">Towels</button>
-              <button class="scene-tab artf-category-tab" type="button" data-category="tshirts">T-shirts</button>
-              <button class="scene-tab artf-category-tab" type="button" data-category="shorts">Shorts</button>
-            </div>
-            <div class="artf-scene-control">
-              <div class="instance-slider-control">
-                <div class="instance-slider-header">
-                  <span>Scene</span>
-                  <output id="artfSceneValue" for="artfSceneSlider">Scene 1 / 8</output>
-                </div>
-                <input id="artfSceneSlider" type="range" min="1" max="8" value="1" step="1" aria-label="aRTF scene from 1 to 8">
-              </div>
-            </div>
+        <figure class="artf-paper-figure">
+          <div class="artf-paper-scroll" role="region" aria-label="Four-method prediction figure" tabindex="0">
+            <img src="static/images/artf-four-methods.png" width="1289" height="427" loading="lazy" decoding="async"
+                 alt="FlingBot, Cloth-Funnels, ClothMate, and our method predict grasp pairs for towels, T-shirts, and shorts across two scenes.">
           </div>
-          <figure class="artf-card">
-            <div class="media-carousel-stage">
-              <button id="artfSamplePrev" class="media-carousel-arrow media-carousel-arrow-left" type="button" aria-label="Previous aRTF sample">
-                <span class="icon"><i class="fas fa-chevron-left"></i></span>
-              </button>
-              <div class="artf-comparison-grid">
-                <div class="artf-method-panel">
-                  <div class="artf-image-stage">
-                    <img id="artfOursPreview" src="static/images/artf_visualization/ours/towels/location_2/sample_01.jpg?v=artf-hires-v1" alt="Ours prediction visualization for selected aRTF category, scene, and sample.">
+          <figcaption>
+            Yellow markers show the predicted grasp pairs.
+            Images adapted from <a href="https://biblio.ugent.be/publication/01HY08WZXZ79HRQ5YRCFTW0SPK">aRTF-Clothes (Lips, wyffels, and De Gusseme, CC BY 4.0)</a>.
+          </figcaption>
+        </figure>
+
+        <table class="table is-fullwidth is-narrow artf-score-table">
+          <caption>Overall STAUC on 1,399 images (Table III)</caption>
+          <thead>
+            <tr>
+              <th scope="col">Method</th>
+              <th scope="col">Deformable</th>
+              <th scope="col">Rigid</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">FlingBot</th><td>0.369</td><td>0.288</td></tr>
+            <tr><th scope="row">Cloth-Funnels</th><td>0.484</td><td>0.392</td></tr>
+            <tr><th scope="row">ClothMate</th><td>0.485</td><td>0.419</td></tr>
+            <tr><th scope="row">Ours</th><td><strong>0.853</strong></td><td><strong>0.833</strong></td></tr>
+          </tbody>
+        </table>
+
+        <details class="artf-explorer" id="artf-explorer">
+          <summary>Browse more Ours and ClothMate examples</summary>
+          <div class="artf-panel">
+            <div class="artf-controls" aria-label="aRTF visualization controls">
+              <div class="scene-tabs artf-category-tabs" role="tablist" aria-label="Garment category">
+                <button class="scene-tab artf-category-tab is-active" type="button" data-category="towels">Towels</button>
+                <button class="scene-tab artf-category-tab" type="button" data-category="tshirts">T-shirts</button>
+                <button class="scene-tab artf-category-tab" type="button" data-category="shorts">Shorts</button>
+              </div>
+              <div class="artf-scene-control">
+                <div class="instance-slider-control">
+                  <div class="instance-slider-header">
+                    <span>Scene</span>
+                    <output id="artfSceneValue" for="artfSceneSlider">Scene 1 / 8</output>
                   </div>
-                </div>
-                <div class="artf-method-panel">
-                  <div class="artf-image-stage">
-                    <img id="artfClothMatePreview" src="static/images/artf_visualization/clothmate/towels/location_2/sample_01.jpg?v=artf-hires-v1" alt="ClothMate prediction visualization for selected aRTF category, scene, and sample.">
-                  </div>
+                  <input id="artfSceneSlider" type="range" min="1" max="8" value="1" step="1" aria-label="aRTF scene from 1 to 8">
                 </div>
               </div>
-              <button id="artfSampleNext" class="media-carousel-arrow media-carousel-arrow-right" type="button" aria-label="Next aRTF sample">
-                <span class="icon"><i class="fas fa-chevron-right"></i></span>
-              </button>
             </div>
-            <figcaption id="artfCaption">Towels - Scene 1 - Sample 01 / 08</figcaption>
-          </figure>
-        </div>
+            <figure class="artf-card">
+              <div class="media-carousel-stage">
+                <button id="artfSamplePrev" class="media-carousel-arrow media-carousel-arrow-left" type="button" aria-label="Previous aRTF sample">
+                  <span class="icon"><i class="fas fa-chevron-left"></i></span>
+                </button>
+                <div class="artf-comparison-grid">
+                  <div class="artf-method-panel">
+                    <div class="artf-image-stage">
+                      <img id="artfOursPreview" src="static/images/artf_visualization/ours/towels/location_2/sample_01.jpg?v=artf-hires-v1" loading="lazy" alt="Ours prediction visualization for selected aRTF category, scene, and sample.">
+                    </div>
+                  </div>
+                  <div class="artf-method-panel">
+                    <div class="artf-image-stage">
+                      <img id="artfClothMatePreview" src="static/images/artf_visualization/clothmate/towels/location_2/sample_01.jpg?v=artf-hires-v1" loading="lazy" alt="ClothMate prediction visualization for selected aRTF category, scene, and sample.">
+                    </div>
+                  </div>
+                </div>
+                <button id="artfSampleNext" class="media-carousel-arrow media-carousel-arrow-right" type="button" aria-label="Next aRTF sample">
+                  <span class="icon"><i class="fas fa-chevron-right"></i></span>
+                </button>
+              </div>
+              <figcaption id="artfCaption">Towels - Scene 1 - Sample 01 / 08</figcaption>
+            </figure>
+          </div>
+        </details>
       </div>
     </section>
 
